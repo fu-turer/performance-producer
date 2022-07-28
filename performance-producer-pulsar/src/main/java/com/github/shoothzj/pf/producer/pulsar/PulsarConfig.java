@@ -48,4 +48,15 @@ public class PulsarConfig {
     @Value("${PULSAR_MAX_PENDING_MESSAGE:1000}")
     public int maxPendingMessage;
 
+    @Value("${PULSAR_ENABLE_BATCHING:true}")
+    public boolean enableBatching;
+
+    @Value("${PULSAR_BATCHING_MAX_BYTES:131072}")
+    public int batchingMaxBytes;
+
+    @Value("${PULSAR_BATCHING_MAX_MESSAGES:1000}")
+    public int batchingMaxMessages;
+
+    @Value("${PULSAR_BATCHING_MAX_PUBLISH_DELAY_MS:1}")
+    public long batchingMaxPublishDelay;
 }

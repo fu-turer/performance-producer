@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class PulsarSendService extends AbstractProduceThread {
@@ -61,7 +62,12 @@ public class PulsarSendService extends AbstractProduceThread {
         PulsarClient client = PulsarClient.builder().memoryLimit(pulsarConfig.memoryLimitMb, SizeUnit.MEGA_BYTES)
                 .serviceUrl(String.format("http://%s:%s", pulsarConfig.host, pulsarConfig.port)).build();
         for (int i = 0; i < pulsarConfig.producerNum; i++) {
-            Producer<byte[]> producer = client.newProducer().maxPendingMessages(pulsarConfig.maxPendingMessage)
+            Producer<byte[]> producer = client.newProducer()
+                    .maxPendingMessages(pulsarConfig.maxPendingMessage)
+                    .enableBatching(pulsarConfig.enableBatching)
+                    .batchingMaxBytes(pulsarConfig.batchingMaxBytes)
+                    .batchingMaxMessages(pulsarConfig.batchingMaxMessages)
+                    .batchingMaxPublishDelay(pulsarConfig.batchingMaxPublishDelay, TimeUnit.MILLISECONDS)
                     .topic(pulsarConfig.topic).create();
             producers.add(producer);
         }
